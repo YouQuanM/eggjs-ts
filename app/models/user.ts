@@ -13,7 +13,7 @@ export interface IUser {
   introduction?: String;
 }
 
-const userSchema = new Schema (
+const UserSchema = new Schema (
   {
     id: {
       type: Number,
@@ -43,5 +43,5 @@ const userSchema = new Schema (
 
 type UserModel = Document & IUser
 
-const User: Model<UserModel> = model<UserModel>('User', userSchema);
+const User: Model<UserModel> = model<UserModel>('User', UserSchema);
 export default User;
