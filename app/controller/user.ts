@@ -1,5 +1,4 @@
 import { Controller } from 'egg';
-import { debug } from 'util';
 
 export default class UserController extends Controller {
   public async getUserList() {
