@@ -1,26 +1,21 @@
 import { Service } from 'egg';
-import UserModel, { IUser } from '../models/user'
+import User, { IUser } from '../models/user'
 
 interface LogUser {
   name: String,
   password: String,
 }
 
-// interface Result {
-//   success: Boolean,
-//   data?: Object,
-//   msg?: String
-// }
-
 /**
  * User Service
  */
-export default class User extends Service {
+export default class UserService extends Service {
   /**
    * userList
    */
   public async userList() {
-    return []
+    const result: IUser[] = await User.find({})
+    return result
   }
   /**
    * add user
@@ -35,8 +30,8 @@ export default class User extends Service {
       }
     }
    
-    // const result: IUser | null = UserModel.findOne({'name': user.name})
-    // if (result)
+    // const userInfo: any = User.findOne({'name': user.name})
+    // if (userInfo === {})
     //   return {
     //     status: 'error',
     //     msg: '该用户名已经被占用'
@@ -45,7 +40,9 @@ export default class User extends Service {
 
     // 添加进db
     try {
-      const result: IUser = await new UserModel(user).save()
+      const result: IUser = await new User(user).save(function(err) {
+          if (err) throw err;
+      })
       console.log('save user', result)
       return {
         status: 'success',
@@ -61,22 +58,28 @@ export default class User extends Service {
    */
   public async login(user: LogUser) {
     // 去user表里找
-    const userInfo: any = UserModel.findOne({'name': user.name})
-    if (userInfo === {}) {
+    // const userInfo: UserModel | null = await User.findOne({name: user.name})
+    const userInfo: any = await User.findOne({name: user.name})
+    if (userInfo === null) {
       return {
         success: false,
         msg: '不存在该用户'
       }
     }
-    if (userInfo.password === user.password) {
-      return {
-        success: true,
-        data: userInfo
+    try {
+      const result = userInfo.comparePassword(user.password)
+      if (result) {
+        return {
+          success: true,
+          data: userInfo
+        }
       }
-    }
-    return {
-      success: false,
-      msg: '密码错误'
+      return {
+        success: false,
+        msg: '密码错误'
+      }
+    } catch (error) {
+      throw error;
     }
   }
 

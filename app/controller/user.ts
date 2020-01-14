@@ -33,6 +33,7 @@ export default class UserController extends Controller {
           token: token
         };
       } else {
+        ctx.status = 400
         ctx.body = {
           success: false,
           msg: result.msg
