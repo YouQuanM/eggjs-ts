@@ -1,9 +1,10 @@
 import { Controller } from 'egg';
+import { debug } from 'util';
 
 export default class UserController extends Controller {
   public async getUserList() {
     const { ctx } = this;
-    ctx.body = await ctx.service.user.userList;
+    ctx.body = await ctx.service.user.userList();
   }
   /**
    * addUser
@@ -17,8 +18,38 @@ export default class UserController extends Controller {
    * login
    * 登录
    */
-  public login() {
+  public async login() {
+    const { ctx, app } = this;
+    const data = ctx.request.body;
+    // 获取用户信息
+    try {
+      const result: any = await ctx.service.user.login(data)
+      if (result.success) {
+        // 生成token
+        const token = app.jwt.sign({...result.userInfo
+        }, app.config.jwt.secret);
+        ctx.body = {
+          success: true,
+          userInfo: result.userInfo,
+          token: token
+        };
+      } else {
+        ctx.body = {
+          success: false,
+          msg: result.msg
+        };
+      }
+    } catch (error) {
+      return error
+    }
+  }
+
+  /**
+   * userInfo
+   */
+  public async userInfo() {
     const { ctx } = this;
-    ctx.body = ctx.service.user.login(ctx.query);
+    console.log(ctx.state.user);
+    ctx.body
   }
 }

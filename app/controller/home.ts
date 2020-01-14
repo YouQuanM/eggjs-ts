@@ -8,6 +8,6 @@ export default class HomeController extends Controller {
 
   public async user() {
     const { ctx } = this;
-    ctx.body = await ctx.service.user.userList();
+    ctx.body = await ctx.service.user.userList;
   }
 }

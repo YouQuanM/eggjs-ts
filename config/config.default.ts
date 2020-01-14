@@ -15,6 +15,35 @@ export default (appInfo: EggAppInfo) => {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
   };
 
+  // mogonDB
+  config.mongoose = {
+    client: {
+      url: 'mongodb://localhost:27017/eggServer',  //你的数据库地址，不要端口
+      options: {
+        useNewUrlParser: true,
+      }
+    }
+  }
+
+  config.jwt = {
+    secret: "123456"//自定义 token 的加密条件字符串
+  };
+  config.security = {
+    csrf: {
+      enable: true,
+      ignoreJSON: true,
+      ignore: '/login'
+    },
+    // domainWhiteList: ['http://localhost:8080'],//允许访问接口的白名单
+  };
+
+  config.cors = {
+    // {string|Function}
+    origin: '*',
+    // {string|Array}
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+  }
+
   // the return config will combines to EggAppConfig
   return {
     ...config,

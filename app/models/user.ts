@@ -1,8 +1,6 @@
 import { Document, model, Model, Schema } from 'mongoose';
 
 export interface IUser {
-  // id
-  id: Number;
   // 用户名
   name: String;
   // 密码
@@ -15,11 +13,6 @@ export interface IUser {
 
 const UserSchema = new Schema (
   {
-    id: {
-      type: Number,
-      unique: true,
-      required: true
-    },
     name: {
       type: String,
       unique: true
