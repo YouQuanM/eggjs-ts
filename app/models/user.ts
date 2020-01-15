@@ -6,6 +6,8 @@ export interface IUser {
   name: String;
   // 密码
   password: String;
+  // email
+  email: String;
   // 头像
   avatar?: String;
   // 简介
@@ -24,6 +26,9 @@ const UserSchema = new Schema (
       type: String,
       unique: true
     },
+    email: {
+      type: String
+    },
     avatar: {
       type: String
     },
@@ -37,6 +42,7 @@ const UserSchema = new Schema (
   }
 )
 
+// save方法的拦截器，将明文密码密码加密保存
 UserSchema.pre('save', function(next) {
   var user: any = this;
 
@@ -58,14 +64,10 @@ UserSchema.pre('save', function(next) {
   });
 })
 
-UserSchema.methods.comparePassword = function(candidatePassword: String) {
-  const result = bcrypt.compare(candidatePassword, this.password)
-  console.log(result)
+// 判断密码是否正确
+UserSchema.methods.comparePassword = async function(candidatePassword: String) {
+  const result = await bcrypt.compare(candidatePassword, this.password)
   return result
-  // function(err, isMatch) {
-  //     if (err) return false;
-  //     return isMatch
-  // })
 }
 
 const User: Model<UserModel> = model<UserModel>('User', UserSchema);

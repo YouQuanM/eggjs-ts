@@ -1,6 +1,9 @@
 import { Controller } from 'egg';
 
 export default class UserController extends Controller {
+  /**
+   * 用户列表
+   */
   public async getUserList() {
     const { ctx } = this;
     ctx.body = await ctx.service.user.userList();
@@ -11,7 +14,14 @@ export default class UserController extends Controller {
    */
   public async addUser() {
     const { ctx } = this;
-    ctx.body = ctx.service.user.addUser(ctx.query);
+    const result: any = await ctx.service.user.addUser(ctx.query);
+    if (result.success) {
+      ctx.status = 200
+      ctx.body = result
+    } else {
+      ctx.status = 400
+      ctx.body = result
+    }
   }
   /**
    * login
@@ -25,11 +35,16 @@ export default class UserController extends Controller {
       const result: any = await ctx.service.user.login(data)
       if (result.success) {
         // 生成token
-        const token = app.jwt.sign({...result.userInfo
+        const token = app.jwt.sign({...result.data
         }, app.config.jwt.secret);
         ctx.body = {
           success: true,
-          userInfo: result.userInfo,
+          userInfo: {
+            name: result.data.name,
+            id: result.data.id,
+            avatar: result.data.avatar || '',
+            introduction: result.data.introduction || ''
+          },
           token: token
         };
       } else {
@@ -43,13 +58,11 @@ export default class UserController extends Controller {
       return error
     }
   }
-
   /**
-   * userInfo
+   * modifyUserInfo
+   * 修改用户信息
    */
-  public async userInfo() {
-    const { ctx } = this;
-    console.log(ctx.state.user);
-    ctx.body
+  public modifyUserInfo() {
+    
   }
 }

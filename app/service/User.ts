@@ -1,9 +1,10 @@
 import { Service } from 'egg';
 import User, { IUser } from '../models/user'
-
+import { validEmail } from '../utils/validate'
 interface LogUser {
-  name: String,
-  password: String,
+  name: string,
+  password: string,
+  email: string
 }
 
 /**
@@ -22,30 +23,38 @@ export default class UserService extends Service {
    * 用户注册
    */
   public async addUser(user: LogUser) {
-    console.log(user)
+    // 密码需要大于8位
     if (user.password.length < 8) {
       return {
-        status: 'error',
+        success: false,
         msg: '密码必须大于8位'
       }
     }
-   
-    // const userInfo: any = User.findOne({'name': user.name})
-    // if (userInfo === {})
-    //   return {
-    //     status: 'error',
-    //     msg: '该用户名已经被占用'
-    //   }
-    // }
+
+    // 验证email合法性
+    if(!validEmail(user.email)) {
+      return {
+        success: false,
+        msg: '邮箱地址不合法'
+      }
+    }
 
     // 添加进db
     try {
-      const result: IUser = await new User(user).save(function(err) {
-          if (err) throw err;
+      const isExist = await User.findOne({name: user.name})
+      if (isExist !== null) {
+        return {
+          success: false,
+          msg: '该用户名已经被占用'
+        }
+      }
+      // 进行添加
+      await new User(user).save(function(err) {
+        if (err) throw err;
       })
-      console.log('save user', result)
+      // 返回成功
       return {
-        status: 'success',
+        success: true,
         msg: '注册成功'
       }
     } catch (error) {
@@ -67,7 +76,7 @@ export default class UserService extends Service {
       }
     }
     try {
-      const result = userInfo.comparePassword(user.password)
+      const result = await userInfo.comparePassword(user.password)
       if (result) {
         return {
           success: true,
