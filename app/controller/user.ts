@@ -62,7 +62,21 @@ export default class UserController extends Controller {
    * modifyUserInfo
    * 修改用户信息
    */
-  public modifyUserInfo() {
-    
+  public async modifyUserInfo() {
+    const { ctx } = this;
+    const data = ctx.request.body;
+    const result: any = await ctx.service.user.modifyUserInfo(data)
+    if (result) {
+      ctx.status = 200
+      ctx.body = {
+        success: true,
+        userInfo: {
+          name: result.name,
+          id: result.id,
+          avatar: result.avatar || '',
+          introduction: result.introduction || ''
+        }
+      }
+    }
   }
 }

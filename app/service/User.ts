@@ -7,6 +7,12 @@ interface LogUser {
   email: string
 }
 
+interface ModifyUser {
+  id: string;
+  avatar?: string;
+  introduction?: string;
+}
+
 /**
  * User Service
  */
@@ -95,7 +101,13 @@ export default class UserService extends Service {
   /**
    * userInfo
    */
-  public async userInfo() {
-    
+  public async modifyUserInfo(user: ModifyUser) {
+    const update = {
+      avatar: user.avatar || null,
+      introduction: user.introduction || null
+    };
+    const opt = { upsert: true, new: true };
+    const result: any = await User.findByIdAndUpdate(user.id, update, opt)
+    return result
   }
 }
