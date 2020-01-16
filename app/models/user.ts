@@ -3,15 +3,15 @@ import * as bcrypt from 'bcrypt';
 const SALT_WORK_FACTOR = 10;
 export interface IUser {
   // 用户名
-  name: String;
+  name: string;
   // 密码
-  password: String;
+  password: string;
   // email
-  email: String;
+  email: string;
   // 头像
-  avatar?: String;
+  avatar?: string;
   // 简介
-  introduction?: String;
+  introduction?: string;
 }
 
 type UserModel = Document & IUser
@@ -64,7 +64,7 @@ UserSchema.pre('save', function (next) {
 })
 
 // 判断密码是否正确
-UserSchema.methods.comparePassword = async function (candidatePassword: String) {
+UserSchema.methods.comparePassword = async function (candidatePassword: string) {
   const result = await bcrypt.compare(candidatePassword, this.password)
   return result
 }

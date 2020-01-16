@@ -100,7 +100,6 @@ export default class UserController extends Controller {
   public async uploadAvatar() {
     const { ctx } = this;
     const parts: any = await ctx.multipart();
-    console.log('strepartsam', parts)
     // ctx.body = stream
     let part: any;
     // parts() 返回 promise 对象
@@ -123,7 +122,7 @@ export default class UserController extends Controller {
           const target = path.join(this.config.baseDir, 'app/public', filename);
           const writeStream = fs.createWriteStream(target);
           await pump(part, writeStream);
-          // todo 将该文件路径绑定到该用户头像上
+          // 将该文件路径绑定到该用户头像上
           const data = {
             id: ctx.query.id,
             avatar: target
