@@ -24,6 +24,7 @@ export default class UserService extends Service {
     const result: IUser[] = await User.find({})
     return result
   }
+  
   /**
    * add user
    * 用户注册
@@ -102,10 +103,17 @@ export default class UserService extends Service {
    * userInfo
    */
   public async modifyUserInfo(user: ModifyUser) {
-    const update = {
-      avatar: user.avatar || null,
-      introduction: user.introduction || null
-    };
+    interface updateData {
+      avatar?: string,
+      introduction?: string
+    }
+    const update: updateData = {}
+    if (user.avatar) {
+      update.avatar = user.avatar
+    }
+    if (user.introduction) {
+      update.introduction = user.introduction
+    }
     const opt = { upsert: true, new: true };
     const result: any = await User.findByIdAndUpdate(user.id, update, opt)
     return result

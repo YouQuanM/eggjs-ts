@@ -7,5 +7,7 @@ export default (app: Application) => {
   router.get('/userlist', controller.user.getUserList);
   router.get('/signUp', controller.user.addUser);
   router.post('/login', controller.user.login);
-  router.post('/modifyUserInfo', jwt, controller.user.modifyUserInfo)
+  router.post('/modifyUserInfo', jwt, controller.user.modifyUserInfo);
+  // TODO 加上传的token验证，一直解决不了。。。
+  router.post('/uploadAvatar', controller.user.uploadAvatar)
 };

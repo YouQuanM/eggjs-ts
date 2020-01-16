@@ -1,5 +1,8 @@
 import { Controller } from 'egg';
-
+const sendToWormhole = require('stream-wormhole');
+import * as fs from 'fs';
+import * as path from 'path';
+const pump = require('mz-modules').pump;
 export default class UserController extends Controller {
   /**
    * 用户列表
@@ -8,6 +11,7 @@ export default class UserController extends Controller {
     const { ctx } = this;
     ctx.body = await ctx.service.user.userList();
   }
+
   /**
    * addUser
    * 注册用户
@@ -23,6 +27,7 @@ export default class UserController extends Controller {
       ctx.body = result
     }
   }
+
   /**
    * login
    * 登录
@@ -58,6 +63,7 @@ export default class UserController extends Controller {
       return error
     }
   }
+
   /**
    * modifyUserInfo
    * 修改用户信息
@@ -65,6 +71,13 @@ export default class UserController extends Controller {
   public async modifyUserInfo() {
     const { ctx } = this;
     const data = ctx.request.body;
+    if (!data.avatar && !data.introduction) {
+      ctx.body = {
+        success: false,
+        msg: '没有修改！'
+      }
+      return
+    }
     const result: any = await ctx.service.user.modifyUserInfo(data)
     if (result) {
       ctx.status = 200
@@ -75,6 +88,64 @@ export default class UserController extends Controller {
           id: result.id,
           avatar: result.avatar || '',
           introduction: result.introduction || ''
+        }
+      }
+    }
+  }
+
+  /**
+   * uploadAvatar
+   * 上传头像
+   */
+  public async uploadAvatar() {
+    const { ctx } = this;
+    const parts: any = await ctx.multipart();
+    console.log('strepartsam', parts)
+    // ctx.body = stream
+    let part: any;
+    // parts() 返回 promise 对象
+    while ((part = await parts()) != null) {
+      if (part.length) {
+        // !多个文件 暂时用不到
+      } else {
+        if (!part.filename) {
+          // 这时是用户没有选择文件就点击了上传(part 是 file stream，但是 part.filename 为空)
+          // 需要做出处理，例如给出错误提示消息
+          ctx.body = {
+            success: false,
+            msg: '未上传任何文件'
+          }
+          return;
+        }
+        try {
+          // 存储到服务端 public文件夹中
+          const filename = part.filename.toLowerCase();
+          const target = path.join(this.config.baseDir, 'app/public', filename);
+          const writeStream = fs.createWriteStream(target);
+          await pump(part, writeStream);
+          // todo 将该文件路径绑定到该用户头像上
+          const data = {
+            id: ctx.query.id,
+            avatar: target
+          }
+          const result: any = await ctx.service.user.modifyUserInfo(data)
+          if (result) {
+            ctx.status = 200
+            ctx.body = {
+              success: true,
+              userInfo: {
+                name: result.name,
+                id: result.id,
+                avatar: result.avatar || '',
+                introduction: result.introduction || ''
+              }
+            }
+          }
+          return
+        } catch (err) {
+          // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+          await sendToWormhole(part);
+          throw err;
         }
       }
     }

@@ -31,18 +31,20 @@ export default (appInfo: EggAppInfo) => {
   config.security = {
     csrf: {
       enable: true,
-      ignoreJSON: true,
-      ignore: '/login'
+      ignoreJSON: false,
+      ignore: ['/login', '/uploadAvatar']
     },
     // domainWhiteList: ['http://localhost:8080'],//允许访问接口的白名单
   };
 
   config.cors = {
-    // {string|Function}
     origin: '*',
-    // {string|Array}
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
   }
+
+  config.multipart = {
+    mode: 'stream',
+  };
 
   // the return config will combines to EggAppConfig
   return {
