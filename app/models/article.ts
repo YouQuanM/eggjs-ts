@@ -1,7 +1,7 @@
 // 此model用于存放用户写的文章
 import { Document, model, Model, Schema } from 'mongoose';
 
-interface IArticle {
+export interface IArticle {
   // userid
   userId: string;
   // 文章标题
@@ -36,5 +36,5 @@ const ArticleSchema = new Schema (
 )
 
 
-const Article: Model<ArticleModel> = model<ArticleModel>('User', ArticleSchema);
+const Article: Model<ArticleModel> = model<ArticleModel>('Article', ArticleSchema);
 export default Article;

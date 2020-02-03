@@ -12,6 +12,8 @@ export interface IUser {
   avatar?: string;
   // 简介
   introduction?: string;
+  // 冗余字段（后面考虑用作身份认证）
+  identity?: string;
 }
 
 type UserModel = Document & IUser
@@ -32,6 +34,9 @@ const UserSchema = new Schema(
       type: String
     },
     introduction: {
+      type: String
+    },
+    identity: {
       type: String
     }
   },

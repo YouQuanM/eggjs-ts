@@ -9,5 +9,11 @@ export default (app: Application) => {
   router.post('/login', controller.user.login);
   router.post('/modifyUserInfo', jwt, controller.user.modifyUserInfo);
   // TODO 加上传的token验证，一直解决不了。。。
-  router.post('/uploadAvatar', controller.user.uploadAvatar)
+  router.post('/uploadAvatar', controller.user.uploadAvatar);
+
+  // ===== article 接口 =====
+  // 写文章
+  router.post('/addArticle', jwt, controller.article.addArticle);
+  // 全部文章列表
+  router.get('/articleList', controller.article.articleList)
 };
