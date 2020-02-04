@@ -28,6 +28,7 @@ export default (appInfo: EggAppInfo) => {
   config.jwt = {
     secret: "liangzhi"//自定义 token 的加密条件字符串
   };
+
   config.security = {
     csrf: {
       enable: true,
@@ -44,6 +45,14 @@ export default (appInfo: EggAppInfo) => {
 
   config.multipart = {
     mode: 'stream',
+  };
+
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 8000,
+      hostname: '0.0.0.0',
+    }
   };
 
   // the return config will combines to EggAppConfig
