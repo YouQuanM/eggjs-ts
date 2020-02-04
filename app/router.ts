@@ -14,8 +14,14 @@ export default (app: Application) => {
   // ===== article 接口 =====
   // 写文章
   router.post('/addArticle', jwt, controller.article.addArticle);
-  // 全部文章列表
+  // 全部文章列表(分页+条件筛选)
   router.get('/articleList', controller.article.articleList);
-  // 文献详情
+  // 文章详情
   router.get('/articleDetail', controller.article.articleDetail);
+
+  // ===== comment 接口 =====
+  // 写评论
+  router.post('/addComment', controller.comment.addComment);
+  // 查询评论
+  router.get('/commentList', controller.comment.commentList);
 };

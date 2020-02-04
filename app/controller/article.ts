@@ -9,7 +9,6 @@ export default class ArticleController extends Controller {
     const { ctx, app } = this;
     const article = ctx.request.body;
     if (article.title) {
-      console.log(app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id)
       article.userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
       const result:any = await ctx.service.article.addArticle(article);
       if (result) {

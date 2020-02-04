@@ -19,7 +19,8 @@ type ArticleModel = Document & IArticle
 const ArticleSchema = new Schema (
   {
     userId: {
-      type: String
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     },
     title: {
       type: String

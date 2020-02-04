@@ -12,7 +12,7 @@ interface searchQuery {
   pageNum: string;
   keyWord?: string;
   type?: string[];
-  // 冗余字段 后面可以加按标签搜索
+  // 可以加按标签搜索
   labels?: string;
 }
 
@@ -37,7 +37,21 @@ export default class ArticleService extends Service {
       params.labels = { $in: query.labels.split(',') }
     }
     const pageNum = parseInt(query.pageNum) - 1
-    const result: IArticle[] = await Article.find(params).skip(pageNum*10).limit(10)
+    const result: IArticle[] = await Article.aggregate([
+                                              {
+                                                $match: params
+                                              },
+                                              {
+                                                $lookup: {
+                                                  from: "users",
+                                                  localField: "userId",
+                                                  foreignField: "_id",
+                                                  as: "user"
+                                                }
+                                              }
+                                            ])
+                                            .skip(pageNum*10)
+                                            .limit(10)
     return result
   }
 
@@ -51,13 +65,11 @@ export default class ArticleService extends Service {
       // 进行添加
       const saveItem = await new Article(article).save()
       // 返回成功
-      // console.log(saveItem)
-      console.log(saveItem._id)
       return {
         articleId: saveItem._id
       }
     } catch (error) {
-      console.log(error)
+      return Error(error)
     }
   }
 

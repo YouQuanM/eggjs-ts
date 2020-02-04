@@ -32,7 +32,7 @@ export default (appInfo: EggAppInfo) => {
     csrf: {
       enable: true,
       ignoreJSON: true,
-      ignore: ['/login', '/uploadAvatar']
+      ignore: ['/login', '/uploadAvatar', '/addComment']
     },
     // domainWhiteList: ['http://localhost:8080'],//允许访问接口的白名单
   };
