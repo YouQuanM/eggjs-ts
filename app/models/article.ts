@@ -8,6 +8,8 @@ export interface IArticle {
   title: string;
   // 文章内容
   content: string;
+  // 类型
+  type: string;
   // 标签
   labels: Array<string>;
 }
@@ -23,6 +25,9 @@ const ArticleSchema = new Schema (
       type: String
     },
     content: {
+      type: String
+    },
+    type: {
       type: String
     },
     labels: {

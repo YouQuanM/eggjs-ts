@@ -15,5 +15,7 @@ export default (app: Application) => {
   // 写文章
   router.post('/addArticle', jwt, controller.article.addArticle);
   // 全部文章列表
-  router.get('/articleList', controller.article.articleList)
+  router.get('/articleList', controller.article.articleList);
+  // 文献详情
+  router.get('/articleDetail', controller.article.articleDetail);
 };

@@ -70,6 +70,7 @@ export default class UserController extends Controller {
    */
   public async modifyUserInfo() {
     const { ctx } = this;
+    // console.log(app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi'))
     const data = ctx.request.body;
     if (!data.avatar && !data.introduction) {
       ctx.body = {
