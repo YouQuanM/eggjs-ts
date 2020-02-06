@@ -31,7 +31,7 @@ export default (appInfo: EggAppInfo) => {
 
   config.security = {
     csrf: {
-      enable: true,
+      enable: false,
       ignoreJSON: true,
       ignore: ['/login', '/uploadAvatar', '/addComment']
     },
@@ -45,14 +45,6 @@ export default (appInfo: EggAppInfo) => {
 
   config.multipart = {
     mode: 'stream',
-  };
-
-  config.cluster = {
-    listen: {
-      path: '',
-      port: 8000,
-      hostname: '0.0.0.0',
-    }
   };
 
   // the return config will combines to EggAppConfig

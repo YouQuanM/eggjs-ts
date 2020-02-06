@@ -100,7 +100,7 @@ export default class UserService extends Service {
   }
 
   /**
-   * userInfo
+   * modifyUserInfo
    */
   public async modifyUserInfo(user: ModifyUser) {
     interface updateData {
@@ -117,5 +117,17 @@ export default class UserService extends Service {
     const opt = { upsert: true, new: true };
     const result: any = await User.findByIdAndUpdate(user.id, update, opt)
     return result
+  }
+
+  /**
+   * getUserInfo
+   */
+  public async getUserInfo(id: string) {
+    try {
+      const result: any = await User.findById(id)
+      return result
+    } catch (error) {
+      return Error(error)
+    }
   }
 }

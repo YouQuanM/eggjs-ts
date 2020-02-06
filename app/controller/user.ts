@@ -65,6 +65,33 @@ export default class UserController extends Controller {
   }
 
   /**
+   * getUserInfo
+   */
+  public async getUserInfo() {
+    const { ctx, app } = this;
+    // 获取用户id
+    const userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
+    try {
+      const result: any = await ctx.service.user.getUserInfo(userId)
+      ctx.body = {
+        success: true,
+        userInfo: {
+          name: result.name,
+          id: result.id,
+          avatar: result.avatar || '',
+          introduction: result.introduction || ''
+        }
+      };
+    } catch (error) {
+      ctx.status = 500
+      ctx.body = {
+        success: false,
+        msg: error
+      }
+    }
+  }
+
+  /**
    * modifyUserInfo
    * 修改用户信息
    */

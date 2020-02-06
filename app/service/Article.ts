@@ -1,5 +1,6 @@
 import { Service } from 'egg';
 import Article, { IArticle } from '../models/article'
+import User, { IUser } from '../models/user'
 
 interface AddArticle {
   title: string;
@@ -78,10 +79,25 @@ export default class ArticleService extends Service {
    * 文章详情
    */
   public async articleDetail(id: string) {
-    console.log(id)
     try {
-      const result = await Article.findById(id)
-      return result
+      const result: any = {
+        article: {},
+        user: {}
+      }
+      const article: IArticle | null = await Article.findOne({_id: id})
+      result.article = article
+      if (article !== null) {
+        const user: IUser | null = await User.findOne({_id: article.userId})
+        result.user = {
+          name: user?.name,
+          avatar: user?.avatar,
+          introduction: user?.introduction,
+          identity: user?.identity
+        }
+        return result
+      } else {
+        return '未找到文章'
+      }
     } catch (error) {
       return Error(error)
     }
