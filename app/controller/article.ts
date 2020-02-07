@@ -2,6 +2,7 @@ import { Controller } from 'egg';
 import * as fs from 'fs';
 import * as path from 'path';
 import { randomString } from '../utils/index'
+import { ARTICLE_TYPES, ARTICLE_LABELS } from '../utils/constants'
 // 这两个没有对应的type包，只能这么引入了
 const sendToWormhole = require('stream-wormhole');
 const pump = require('mz-modules').pump;
@@ -119,4 +120,18 @@ export default class ArticleController extends Controller {
     }
   }
 
+  /**
+   * type
+   * 文章类型
+   */
+  public async articleTypesLabels() {
+    const { ctx } = this;
+    ctx.body = {
+      success: true,
+      data: {
+        types: ARTICLE_TYPES,
+        labels: ARTICLE_LABELS
+      }
+    }
+  }
 }

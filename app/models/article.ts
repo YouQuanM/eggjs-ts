@@ -8,10 +8,14 @@ export interface IArticle {
   title: string;
   // 文章内容
   content: string;
-  // 类型
-  type: string;
-  // 标签
-  labels: Array<string>;
+  // 类型id
+  typeValue: number;
+  // 类型名
+  typeLable: string;
+  // 标签id array
+  labelsValue: Array<number>;
+  // 标签名 array
+  labelsLabel: Array<string>;
 }
 
 type ArticleModel = Document & IArticle
@@ -28,10 +32,16 @@ const ArticleSchema = new Schema (
     content: {
       type: String
     },
-    type: {
+    typeValue: {
+      type: Number
+    },
+    typeLabel: {
       type: String
     },
-    labels: {
+    labelsValue: {
+      type: Array
+    },
+    labelsLabel: {
       type: Array
     }
   },

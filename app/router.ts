@@ -21,6 +21,8 @@ export default (app: Application) => {
   router.get('/api/articleDetail', controller.article.articleDetail);
   // 上传图片接口
   router.post('/api/uploadImg', jwt, controller.article.uploadImg);
+  // 类别和标签
+  router.get('/api/articleTypesLabels', controller.article.articleTypesLabels)
 
   // ===== comment 接口 =====
   // 写评论
