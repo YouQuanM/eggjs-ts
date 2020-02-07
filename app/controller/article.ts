@@ -1,4 +1,9 @@
 import { Controller } from 'egg';
+import * as fs from 'fs';
+import * as path from 'path';
+// 这两个没有对应的type包，只能这么引入了
+const sendToWormhole = require('stream-wormhole');
+const pump = require('mz-modules').pump;
 
 export default class ArticleController extends Controller {
   /**
@@ -68,4 +73,49 @@ export default class ArticleController extends Controller {
       }
     }
   }
+
+  /**
+   * uploadImg
+   * 上传图片
+   */
+  public async uploadImg() {
+    const { ctx } = this;
+    const parts: any = await ctx.multipart();
+    // ctx.body = stream
+    let part: any;
+    // parts() 返回 promise 对象
+    while ((part = await parts()) != null) {
+      if (part.length) {
+        // !多个文件 暂时用不到
+      } else {
+        if (!part.filename) {
+          // 这时是用户没有选择文件就点击了上传(part 是 file stream，但是 part.filename 为空)
+          // 需要做出处理，例如给出错误提示消息
+          ctx.body = {
+            success: false,
+            msg: '未上传任何文件'
+          }
+          return;
+        }
+        try {
+          // 存储到服务端 public文件夹中
+          const filename = part.filename.toLowerCase();
+          const target = path.join(this.config.baseDir, 'app/public/articleimg', filename);
+          const writeStream = fs.createWriteStream(target);
+          await pump(part, writeStream);
+          // 返回该文件路径
+          ctx.status = 200
+          ctx.body = {
+            success: true,
+            imgUrl: target
+          }
+        } catch (err) {
+          // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+          await sendToWormhole(part);
+          throw err;
+        }
+      }
+    }
+  }
+
 }

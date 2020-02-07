@@ -19,6 +19,8 @@ export default (app: Application) => {
   router.get('/api/articleList', controller.article.articleList);
   // 文章详情
   router.get('/api/articleDetail', controller.article.articleDetail);
+  // 上传图片接口
+  router.post('/api/uploadImg', jwt, controller.article.uploadImg);
 
   // ===== comment 接口 =====
   // 写评论
