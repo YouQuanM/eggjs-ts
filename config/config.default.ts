@@ -35,7 +35,7 @@ export default (appInfo: EggAppInfo) => {
       ignoreJSON: true,
       ignore: ['/login', '/uploadAvatar', '/addComment']
     },
-    // domainWhiteList: ['http://localhost:8080'],//允许访问接口的白名单
+    domainWhiteList: ['http://localhost:8686'] //允许访问接口的白名单
   };
 
   config.cors = {
