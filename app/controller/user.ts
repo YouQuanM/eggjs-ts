@@ -2,6 +2,7 @@ import { Controller } from 'egg';
 const sendToWormhole = require('stream-wormhole');
 import * as fs from 'fs';
 import * as path from 'path';
+import { randomString } from '../utils/index'
 const pump = require('mz-modules').pump;
 export default class UserController extends Controller {
   /**
@@ -147,7 +148,7 @@ export default class UserController extends Controller {
         try {
           // 存储到服务端 public文件夹中
           const filename = part.filename.toLowerCase();
-          const target = path.join(this.config.baseDir, 'app/public/avatar', filename);
+          const target = path.join(this.config.baseDir, 'app/public/avatar', randomString(12) + filename);
           const writeStream = fs.createWriteStream(target);
           await pump(part, writeStream);
           // 将该文件路径绑定到该用户头像上

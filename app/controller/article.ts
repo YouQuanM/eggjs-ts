@@ -1,6 +1,7 @@
 import { Controller } from 'egg';
 import * as fs from 'fs';
 import * as path from 'path';
+import { randomString } from '../utils/index'
 // 这两个没有对应的type包，只能这么引入了
 const sendToWormhole = require('stream-wormhole');
 const pump = require('mz-modules').pump;
@@ -15,7 +16,7 @@ export default class ArticleController extends Controller {
     const article = ctx.request.body;
     if (article.title) {
       article.userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
-      const result:any = await ctx.service.article.addArticle(article);
+      const result: any = await ctx.service.article.addArticle(article);
       if (result) {
         ctx.body = {
           success: true,
@@ -40,7 +41,7 @@ export default class ArticleController extends Controller {
   public async articleList() {
     const { ctx } = this;
     try {
-      const result:any = await ctx.service.article.articleList(ctx.query);
+      const result: any = await ctx.service.article.articleList(ctx.query);
       ctx.body = {
         success: true,
         data: result
@@ -100,7 +101,7 @@ export default class ArticleController extends Controller {
         try {
           // 存储到服务端 public文件夹中
           const filename = part.filename.toLowerCase();
-          const target = path.join(this.config.baseDir, 'app/public/articleimg', filename);
+          const target = path.join(this.config.baseDir, 'app/public/articleimg', randomString(12) + filename);
           const writeStream = fs.createWriteStream(target);
           await pump(part, writeStream);
           // 返回该文件路径
