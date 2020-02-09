@@ -53,7 +53,17 @@ export default class ArticleService extends Service {
                                             ])
                                             .skip(pageNum*10)
                                             .limit(10)
-    return result
+    const total = await Article.count(params)
+    const pagination = {
+      total: total,
+      pageSize: 10,
+      pageTotal: Math.ceil(total / 10)
+    }
+    const data = {
+      list: result,
+      pagination: pagination
+    }
+    return data
   }
 
   /**
@@ -102,4 +112,11 @@ export default class ArticleService extends Service {
       return Error(error)
     }
   }
+
+  /**
+   * likeArticle
+   */
+  // public likeArticle(id) {
+    
+  // }
 }
