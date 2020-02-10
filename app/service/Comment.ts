@@ -47,8 +47,7 @@ export default class CommentService extends Service {
             as: "user"
           }
         }
-      ])
-      console.log(list)
+      ]).sort({_id: -1})
       const result: any[] = []
       // 处理一下查出来的list 把敏感字段去掉
       list.forEach((v:any) => {
