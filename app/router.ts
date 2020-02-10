@@ -23,6 +23,8 @@ export default (app: Application) => {
   router.post('/api/uploadImg', jwt, controller.article.uploadImg);
   // 类别和标签
   router.get('/api/articleTypesLabels', controller.article.articleTypesLabels)
+  // 修改文章
+  router.post('/api/modifyArticle', jwt, controller.article.modifyArticle)
 
   // ===== comment 接口 =====
   // 写评论

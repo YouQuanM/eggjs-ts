@@ -21,6 +21,7 @@ export default (appInfo: EggAppInfo) => {
       url: 'mongodb://localhost:27017/eggServer',  //你的数据库地址，不要端口
       options: {
         useNewUrlParser: true,
+        useFindAndModify: false
       }
     }
   }

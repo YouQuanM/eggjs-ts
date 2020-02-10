@@ -16,6 +16,12 @@ export interface IArticle {
   labelsValue: Array<number>;
   // 标签名 array
   labelsLabel: Array<string>;
+  // 点赞数
+  likes: number;
+  // 匿名
+  showAuthor: boolean;
+  // 删除
+  delete: boolean;
 }
 
 type ArticleModel = Document & IArticle
@@ -43,6 +49,15 @@ const ArticleSchema = new Schema (
     },
     labelsLabel: {
       type: Array
+    },
+    likes: {
+      type: Number
+    },
+    showAuthor: {
+      type: Boolean
+    },
+    delete: {
+      type: Boolean
     }
   },
   {
@@ -50,7 +65,6 @@ const ArticleSchema = new Schema (
     versionKey: false
   }
 )
-
 
 const Article: Model<ArticleModel> = model<ArticleModel>('Article', ArticleSchema);
 export default Article;

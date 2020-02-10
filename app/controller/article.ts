@@ -134,4 +134,47 @@ export default class ArticleController extends Controller {
       }
     }
   }
+
+  /**
+   * modifyArticle
+   * 修改文章
+   * content
+   * showAuthor
+   * delete
+   */
+  public async modifyArticle() {
+    const { ctx, app } = this;
+    const query = ctx.request.body;
+    // 请求发起人id
+    const userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
+    if (query.userId !== userId) {
+      ctx.body = {
+        success: false,
+        msg: '这不是你的文章，非法修改'
+      }
+      return
+    }
+    try {
+      const result = await ctx.service.article.modifyArticle(query)
+      ctx.body = {
+        success: true,
+        data: result
+      }
+    } catch (error) {
+      ctx.status = 500
+      ctx.body = {
+        success: false,
+        msg: 'error'
+      }
+    }
+  }
+
+  /**
+   * likeArticle
+   * 点赞
+   */
+  // public async likeArticle() {
+  //   const { ctx } = this;
+    
+  // }
 }

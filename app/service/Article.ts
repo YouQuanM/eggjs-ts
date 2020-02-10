@@ -17,6 +17,16 @@ interface searchQuery {
   labels?: string;
 }
 
+// 修改文章参数
+interface modifyQuery {
+  articleId: string;
+  content?: string;
+  labelsValue?: Array<number>;
+  labelsLabel?: Array<string>;
+  showAuthor?: boolean;
+  delete?: boolean;
+}
+
 export default class ArticleService extends Service {
   /**
    * articleList
@@ -111,6 +121,38 @@ export default class ArticleService extends Service {
     } catch (error) {
       return Error(error)
     }
+  }
+
+  /**
+   * modifyArticle
+   */
+  public async modifyArticle(query: modifyQuery) {
+    interface updateData {
+      content?: string;
+      labelsValue?: Array<number>;
+      labelsLabel?: Array<string>;
+      showAuthor?: boolean;
+      delete?: boolean;
+    }
+    const update: updateData = {}
+    if (query.content) {
+      update.content = query.content
+    }
+    if (query.showAuthor === false || query.showAuthor === true) {
+      update.showAuthor = query.showAuthor
+    }
+    if (query.delete) {
+      update.delete = query.delete
+    }
+    if (query.labelsValue) {
+      update.labelsValue = query.labelsValue
+    }
+    if (query.labelsLabel) {
+      update.labelsLabel = query.labelsLabel
+    }
+    const opt = { upsert: true, new: true };
+    const result: any = await Article.findByIdAndUpdate(query.articleId, update, opt)
+    return result
   }
 
   /**
