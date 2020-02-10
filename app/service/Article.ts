@@ -48,21 +48,52 @@ export default class ArticleService extends Service {
       params.labels = { $in: query.labels.split(',') }
     }
     const pageNum = parseInt(query.pageNum) - 1
-    const result: IArticle[] = await Article.aggregate([
-                                              {
-                                                $match: params
-                                              },
-                                              {
-                                                $lookup: {
-                                                  from: "users",
-                                                  localField: "userId",
-                                                  foreignField: "_id",
-                                                  as: "user"
-                                                }
-                                              }
-                                            ])
-                                            .skip(pageNum*10)
-                                            .limit(10)
+    const result: any[] = await Article.aggregate([
+      {
+        $match: params
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user"
+        }
+      }
+    ])
+    .skip(pageNum*10)
+    .limit(10)
+    let list: any = []
+    result.forEach(v => {
+      if(v.showAuthor) {
+        list.push({
+          _id: v.id,
+          title: v.title,
+          content: v.content,
+          typeValue: v.typeValue,
+          typeLabel: v.typeLabel,
+          labelsLabel: v.labelsLabel,
+          createdAt: v.createdAt,
+          updatedAt: v.updatedAt,
+          user: {
+            id: v.user[0]._id,
+            name: v.user[0].name,
+            avatar: v.user[0]?.avatar,
+            introduction: v.user[0]?.introduction,
+            identity: v.user[0]?.identity
+          }
+        })
+      } else {
+        list.push({
+          _id: v.id,
+          title: v.title,
+          content: v.content,
+          user: {
+            name: '匿名'
+          }
+        })
+      }
+    })
     const total = await Article.count(params)
     const pagination = {
       total: total,
@@ -70,7 +101,7 @@ export default class ArticleService extends Service {
       pageTotal: Math.ceil(total / 10)
     }
     const data = {
-      list: result,
+      list: list,
       pagination: pagination
     }
     return data
