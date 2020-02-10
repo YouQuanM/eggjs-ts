@@ -67,7 +67,7 @@ export default class ArticleService extends Service {
     result.forEach(v => {
       if(v.showAuthor) {
         list.push({
-          _id: v.id,
+          id: v._id,
           title: v.title,
           content: v.content,
           typeValue: v.typeValue,
@@ -85,9 +85,14 @@ export default class ArticleService extends Service {
         })
       } else {
         list.push({
-          _id: v.id,
+          id: v._id,
           title: v.title,
           content: v.content,
+          typeValue: v.typeValue,
+          typeLabel: v.typeLabel,
+          labelsLabel: v.labelsLabel,
+          createdAt: v.createdAt,
+          updatedAt: v.updatedAt,
           user: {
             name: '匿名'
           }
@@ -138,12 +143,19 @@ export default class ArticleService extends Service {
       const article: IArticle | null = await Article.findOne({_id: id})
       result.article = article
       if (article !== null) {
-        const user: IUser | null = await User.findOne({_id: article.userId})
-        result.user = {
-          name: user?.name,
-          avatar: user?.avatar,
-          introduction: user?.introduction,
-          identity: user?.identity
+        if (article?.showAuthor) {
+          const user: IUser | null = await User.findOne({_id: article.userId})
+          result.user = {
+            name: user?.name,
+            avatar: user?.avatar,
+            introduction: user?.introduction,
+            identity: user?.identity
+          }
+        } else {
+          result.article.userId = null
+          result.user = {
+            name: '匿名'
+          }
         }
         return result
       } else {
