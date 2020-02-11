@@ -25,6 +25,7 @@ interface modifyQuery {
   labelsLabel?: Array<string>;
   showAuthor?: boolean;
   delete?: boolean;
+  description: string;
 }
 
 export default class ArticleService extends Service {
@@ -63,6 +64,7 @@ export default class ArticleService extends Service {
     ])
     .skip(pageNum*10)
     .limit(10)
+    .sort({_id: -1})
     let list: any = []
     result.forEach(v => {
       if(v.showAuthor) {
@@ -75,6 +77,7 @@ export default class ArticleService extends Service {
           labelsLabel: v.labelsLabel,
           createdAt: v.createdAt,
           updatedAt: v.updatedAt,
+          description: v.description,
           user: {
             id: v.user[0]._id,
             name: v.user[0].name,
@@ -93,6 +96,7 @@ export default class ArticleService extends Service {
           labelsLabel: v.labelsLabel,
           createdAt: v.createdAt,
           updatedAt: v.updatedAt,
+          description: v.description,
           user: {
             name: '匿名'
           }
@@ -176,8 +180,10 @@ export default class ArticleService extends Service {
       labelsLabel?: Array<string>;
       showAuthor?: boolean;
       delete?: boolean;
+      description?: string;
     }
     const update: updateData = {}
+    update.description = query.description
     if (query.content) {
       update.content = query.content
     }

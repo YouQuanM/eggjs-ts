@@ -22,6 +22,8 @@ export interface IArticle {
   showAuthor: boolean;
   // 删除
   delete: boolean;
+  // 简介
+  description: string;
 }
 
 type ArticleModel = Document & IArticle
@@ -51,13 +53,17 @@ const ArticleSchema = new Schema (
       type: Array
     },
     likes: {
-      type: Number
+      type: Number,
+      default: 0
     },
     showAuthor: {
       type: Boolean
     },
     delete: {
       type: Boolean
+    },
+    description: {
+      type: String
     }
   },
   {
