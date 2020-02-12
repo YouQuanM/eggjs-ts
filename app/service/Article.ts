@@ -62,9 +62,9 @@ export default class ArticleService extends Service {
         }
       }
     ])
+    .sort({_id: -1})
     .skip(pageNum*10)
     .limit(10)
-    .sort({_id: -1})
     let list: any = []
     result.forEach(v => {
       if(v.showAuthor) {
