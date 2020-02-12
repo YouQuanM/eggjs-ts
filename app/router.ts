@@ -31,4 +31,8 @@ export default (app: Application) => {
   router.post('/api/addComment', controller.comment.addComment);
   // 查询评论
   router.get('/api/commentList', controller.comment.commentList);
+
+  // ===== likes 接口 =====
+  // 点赞ordiss
+  router.post('/api/updateLikeAndDiss', jwt, controller.likes.updateLikeAndDiss);
 };

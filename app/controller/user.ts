@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { randomString } from '../utils/index'
 const pump = require('mz-modules').pump;
+import { validEmail } from '../utils/validate'
+
 export default class UserController extends Controller {
   /**
    * 用户列表
@@ -19,13 +21,48 @@ export default class UserController extends Controller {
    */
   public async addUser() {
     const { ctx } = this;
-    const result: any = await ctx.service.user.addUser(ctx.query);
-    if (result.success) {
-      ctx.status = 200
-      ctx.body = result
-    } else {
-      ctx.status = 400
-      ctx.body = result
+    const user = ctx.query
+    // 密码需要大于8位
+    if (user.password.length < 8) {
+      ctx.status = 500
+      ctx.body = {
+        success: false,
+        msg: '密码必须大于8位'
+      }
+    }
+
+    // 验证email合法性
+    if(!validEmail(user.email)) {
+      ctx.status = 500
+      ctx.body = {
+        success: false,
+        msg: '邮箱地址不合法'
+      }
+    }
+
+    try {
+      const result: any = await ctx.service.user.addUser(ctx.query);
+      if (result.success) {
+        ctx.body = {
+          success: true,
+          msg: '注册成功'
+        }
+      } else {
+        ctx.status = 500
+        ctx.body = {
+          success: false,
+          msg: result.msg
+        }
+      }
+      // 初始化likes表
+      const initializationLikes = ctx.service.likes.initializationLikes(result.data._id)
+      console.log(initializationLikes)
+    } catch (error) {
+      ctx.status = 500
+      ctx.body = {
+        success: false,
+        msg: error
+      }
     }
   }
 

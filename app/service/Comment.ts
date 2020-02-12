@@ -1,7 +1,6 @@
 import { Service } from 'egg';
 import Comment, { IComment } from '../models/comment'
 
-
 interface addComment {
   // 文章id
   articleId: string;

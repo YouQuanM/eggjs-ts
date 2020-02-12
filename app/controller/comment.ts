@@ -14,7 +14,6 @@ export default class CommentController extends Controller {
     if (ctx.header.authorization) {
       try {
         // 通过token拿到userid
-        console.log(app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc)
         query.userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
         query.userName = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc.name
         const result = ctx.service.comment.addComment(query)

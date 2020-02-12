@@ -1,6 +1,5 @@
 import { Service } from 'egg';
 import User, { IUser } from '../models/user'
-import { validEmail } from '../utils/validate'
 interface LogUser {
   name: string,
   password: string,
@@ -30,42 +29,24 @@ export default class UserService extends Service {
    * 用户注册
    */
   public async addUser(user: LogUser) {
-    // 密码需要大于8位
-    if (user.password.length < 8) {
+
+    const isExist = await User.findOne({name: user.name})
+    if (isExist !== null) {
       return {
         success: false,
-        msg: '密码必须大于8位'
+        msg: '该用户已经存在'
       }
     }
-
-    // 验证email合法性
-    if(!validEmail(user.email)) {
-      return {
-        success: false,
-        msg: '邮箱地址不合法'
-      }
-    }
-
     // 添加进db
     try {
-      const isExist = await User.findOne({name: user.name})
-      if (isExist !== null) {
-        return {
-          success: false,
-          msg: '该用户名已经被占用'
-        }
-      }
       // 进行添加
-      await new User(user).save(function(err) {
-        if (err) throw err;
-      })
-      // 返回成功
+      const result = await new User(user).save()
       return {
         success: true,
-        msg: '注册成功'
+        data: result
       }
     } catch (error) {
-      console.log(error)
+      return error
     }
   }
 

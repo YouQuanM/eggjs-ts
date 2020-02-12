@@ -1,3 +1,4 @@
+// 文章类别
 export const ARTICLE_TYPES = [
   {
     value: 1,
@@ -21,6 +22,7 @@ export const ARTICLE_TYPES = [
   }
 ]
 
+// 文章标签
 export const ARTICLE_LABELS = [
   {
     value: 10,
@@ -69,5 +71,33 @@ export const ARTICLE_LABELS = [
   {
     value: 90,
     label: '其他'
+  }
+]
+
+// 用户操作
+export const USER_OPERATION = [
+  {
+    value: 0,
+    label: '写文章'
+  },
+  {
+    value: 1,
+    label: '修改文章'
+  },
+  {
+    value: 2,
+    label: '评论'
+  },
+  {
+    value: 3,
+    label: '被评论'
+  },
+  {
+    value: 4,
+    label: '点赞'
+  },
+  {
+    value: 5,
+    label: '被点赞'
   }
 ]
