@@ -12,7 +12,7 @@ interface AddArticle {
 interface searchQuery {
   pageNum: string;
   keyWord?: string;
-  type?: string[];
+  type?: string;
   // 可以加按标签搜索
   labels?: string;
 }
@@ -42,11 +42,11 @@ export default class ArticleService extends Service {
     }
     // 按类别搜索
     if (query.type) {
-      params.type = query.type
+      params.typeValue = parseInt(query.type)
     }
     // 按标签搜索
     if (query.labels) {
-      params.labels = { $in: query.labels.split(',') }
+      params.labelsValue = { $in: query.labels.split(',') }
     }
     const pageNum = parseInt(query.pageNum) - 1
     const result: any[] = await Article.aggregate([
