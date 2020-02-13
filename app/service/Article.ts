@@ -207,7 +207,31 @@ export default class ArticleService extends Service {
   /**
    * likeArticle
    */
-  // public likeArticle(id) {
-    
-  // }
+  public async likeAndDissArticle(id: string, num: number) {
+    const article = await Article.findById(id)
+    let likesNum = 0
+    if (article?.likes || article?.likes === 0) {
+      likesNum = article?.likes + num
+    }
+    const opt = { upsert: true, new: true };
+    const result: any = await Article.findByIdAndUpdate(id, {likes: likesNum}, opt)
+    return result
+  }
+
+  /**
+   * getArticleUserId
+   */
+  public async getArticleUserId(id: string) {
+    try {
+      const article = await Article.findOne({_id: id})
+      if (article) {
+        const user = await User.findOne({_id: article.userId})
+        if (user) {
+          return user
+        }
+      }
+    } catch (error) {
+      return error
+    }
+  }
 }

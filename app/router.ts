@@ -35,4 +35,7 @@ export default (app: Application) => {
   // ===== likes 接口 =====
   // 点赞ordiss
   router.post('/api/updateLikeAndDiss', jwt, controller.likes.updateLikeAndDiss);
+
+  // ===== userlogs 接口 =====
+  router.post('/api/getUserLogs', jwt, controller.userlogs.getUserLogs);
 };

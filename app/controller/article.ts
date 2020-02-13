@@ -24,9 +24,16 @@ export default class ArticleController extends Controller {
           msg: '成功',
           data: result
         }
+        // 记录
+        let query = {
+          operator: article.userId,
+          articleId: result.articleId,
+          operation: 0 // 写文章
+        }
+        ctx.service.userLogs.addUserLogs(query)
       }
     } else {
-      ctx.status = 400
+      ctx.status = 500
       ctx.body = {
         success: false,
         msg: '标题不能为空'
@@ -160,6 +167,13 @@ export default class ArticleController extends Controller {
         success: true,
         data: result
       }
+      // 记录
+      let logquery = {
+        operator: userId,
+        articleId: result._id,
+        operation: 1 // 修改文章
+      }
+      ctx.service.userLogs.addUserLogs(logquery)
     } catch (error) {
       ctx.status = 500
       ctx.body = {

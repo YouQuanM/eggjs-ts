@@ -21,8 +21,8 @@ export default class CommentService extends Service {
    */
   public async addComment(comment: addComment) {
     try {
-      await new Comment(comment).save()
-      return true
+      const result = await new Comment(comment).save()
+      return result
     } catch (error) {
       return Error(error)
     }

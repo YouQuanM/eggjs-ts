@@ -90,14 +90,10 @@ export const USER_OPERATION = [
   },
   {
     value: 3,
-    label: '被评论'
-  },
-  {
-    value: 4,
     label: '点赞'
   },
   {
-    value: 5,
-    label: '被点赞'
+    value: 4,
+    label: 'Diss'
   }
 ]

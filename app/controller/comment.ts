@@ -16,12 +16,22 @@ export default class CommentController extends Controller {
         // 通过token拿到userid
         query.userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
         query.userName = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc.name
-        const result = ctx.service.comment.addComment(query)
+        const result: any = await ctx.service.comment.addComment(query)
         if (result) {
           ctx.body = {
             success: true,
             msg: '评论成功'
           }
+          const user = await ctx.service.article.getArticleUserId(ctx.request.body.articleId)
+          // 记录
+          let logquery = {
+            operator: query.userId,
+            articleId: ctx.request.body.articleId,
+            commentId: result._id,
+            userId: user._id,
+            operation: 2 // 评论
+          }
+          ctx.service.userLogs.addUserLogs(logquery)
         }
       } catch (error) {
         ctx.status = 400
@@ -33,12 +43,21 @@ export default class CommentController extends Controller {
     } else {
       // 未登录
       try {
-        const result = ctx.service.comment.addComment(query)
-        console.log(result)
+        const result: any = await ctx.service.comment.addComment(query)
         ctx.body = {
           success: true,
           msg: '评论成功'
         }
+        const user = await ctx.service.article.getArticleUserId(ctx.request.body.articleId)
+        // 记录
+        let logquery = {
+          operator: null,
+          articleId: ctx.request.body.articleId,
+          commentId: result._id,
+          userId: user._id,
+          operation: 2 // 评论
+        }
+        ctx.service.userLogs.addUserLogs(logquery)
       } catch (error) {
         ctx.status = 400
         ctx.body = {
