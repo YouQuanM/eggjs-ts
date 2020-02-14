@@ -89,6 +89,18 @@ export default class LikesService extends Service {
       return error
     }
   }
+
+  /**
+   * getLikeAndDiss
+   */
+  public async getLikeAndDiss(userId: string) {
+    try {
+      const userlikesDissData = await Likes.findOne({ userId: userId })
+      return userlikesDissData
+    } catch (error) {
+      return error
+    }
+  }
 }
 
 function findAndRemove(arr: Array<string>, id: string) {

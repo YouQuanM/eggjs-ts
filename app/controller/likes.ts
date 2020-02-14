@@ -14,7 +14,8 @@ export default class LikesController extends Controller {
       const { likesNum } = await ctx.service.likes.updateLikesAndDiss(ctx.request.body)
       ctx.body = {
         success: true,
-        msg: '操作成功'
+        msg: '操作成功',
+        data: likesNum
       }
       // 更新article中的likesNumber
       ctx.service.article.likeAndDissArticle(ctx.request.body.articleId, likesNum)
@@ -38,6 +39,26 @@ export default class LikesController extends Controller {
       ctx.body = {
         success: false,
         msg: error
+      }
+    }
+  }
+
+  /**
+   * getLikeAndDiss
+   */
+  public async getLikeAndDiss() {
+    const { ctx, app } = this;
+    const userId = app.jwt.verify(ctx.header.authorization.split(' ')[1], 'liangzhi')._doc._id
+    try {
+      const result = await ctx.service.likes.getLikeAndDiss(userId)
+      ctx.body = {
+        success: true,
+        data: result
+      }
+    } catch (error) {
+      ctx.body = {
+        success: false,
+        data: error
       }
     }
   }
