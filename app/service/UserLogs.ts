@@ -1,5 +1,6 @@
 import { Service } from 'egg';
 import UserLogs from '../models/userlogs'
+import { Types } from 'mongoose'
 
 interface userLogsQuery {
   operator: string | null;
@@ -28,57 +29,49 @@ export default class UserLogsService extends Service {
    */
   public async getUserLogs(id: string) {
     try {
-      console.log(id)
-      // const query = {
-      //   $or: [
-      //     { userId: id },
-      //     { operator: id }
-      //   ]
-      // }
-      // const result = await UserLogs.find(query)
+      let params = {
+        $or: [
+          {userId: Types.ObjectId(id)},
+          {operator: Types.ObjectId(id)}
+        ]
+      }
       const result = await UserLogs.aggregate([
         {
-          "$match": {
-            "$or": [
-              { 'userId': id },
-              { 'operator': id }
-            ]
+          $match: params
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user"
+          }
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "operator",
+            foreignField: "_id",
+            as: "operator"
+          }
+        },
+        {
+          $lookup: {
+            from: "articles",
+            localField: "articleId",
+            foreignField: "_id",
+            as: "article"
+          }
+        },
+        {
+          $lookup: {
+            from: "comments",
+            localField: "commentId",
+            foreignField: "_id",
+            as: "comment"
           }
         }
-        //   // {
-        //   //   $lookup: {
-        //   //     from: "users",
-        //   //     localField: "userId",
-        //   //     foreignField: "_id",
-        //   //     as: "user"
-        //   //   }
-        //   // },
-        //   // {
-        //   //   $lookup: {
-        //   //     from: "users",
-        //   //     localField: "operator",
-        //   //     foreignField: "_id",
-        //   //     as: "operator"
-        //   //   }
-        //   // },
-        //   // {
-        //   //   $lookup: {
-        //   //     from: "article",
-        //   //     localField: "articleId",
-        //   //     foreignField: "_id",
-        //   //     as: "article"
-        //   //   }
-        //   // },
-        //   // {
-        //   //   $lookup: {
-        //   //     from: "comment",
-        //   //     localField: "commentId",
-        //   //     foreignField: "_id",
-        //   //     as: "comment"
-        //   //   }
-        //   // }
       ])
-      console.log(result)
       return result
     } catch (error) {
       return error
