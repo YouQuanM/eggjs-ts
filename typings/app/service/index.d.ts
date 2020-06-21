@@ -2,18 +2,10 @@
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
-import ExportArticle from '../../../app/service/Article';
-import ExportComment from '../../../app/service/Comment';
-import ExportLikes from '../../../app/service/Likes';
-import ExportUser from '../../../app/service/User';
-import ExportUserLogs from '../../../app/service/UserLogs';
+import ExportInterviewer from '../../../app/service/Interviewer';
 
 declare module 'egg' {
   interface IService {
-    article: ExportArticle;
-    comment: ExportComment;
-    likes: ExportLikes;
-    user: ExportUser;
-    userLogs: ExportUserLogs;
+    interviewer: ExportInterviewer;
   }
 }

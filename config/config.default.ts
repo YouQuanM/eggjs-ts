@@ -18,7 +18,7 @@ export default (appInfo: EggAppInfo) => {
   // mogonDB
   config.mongoose = {
     client: {
-      url: 'mongodb://localhost:27017/eggServer',  //你的数据库地址，不要端口
+      url: 'mongodb://localhost:27017/juhaoran',  //你的数据库地址，不要端口
       options: {
         useNewUrlParser: true,
         useFindAndModify: false
