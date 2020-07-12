@@ -31,6 +31,7 @@
     "egg-scripts": "^2.6.0",
     "mz": "^2.7.0",
     "mz-modules": "^2.1.0",
+    "node-xlsx": "^0.15.0",
     "stream-wormhole": "^1.1.0"
   },
   "devDependencies": {

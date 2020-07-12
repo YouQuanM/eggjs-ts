@@ -1,8 +1,6 @@
 import { Service } from 'egg';
 import Interviewer, { IInterviewer } from '../models/interviewer'
 
-
-
 export default class InterviewerService extends Service {
   public async List(query: any) {
     console.log(query)
@@ -28,4 +26,27 @@ export default class InterviewerService extends Service {
     }
   }
 
+  public async delete(query: any) {
+    try {
+      // 进行添加
+      console.log('query===>', query)
+      const result = await Interviewer.deleteOne({_id: query.userId})
+      // 返回成功
+      return {
+        result
+      }
+    } catch (error) {
+      return Error(error)
+    }
+  }
+  
+  public async addFromExcel(arr: IInterviewer[]){
+    try {
+      console.log(arr)
+      const res = await Interviewer.insertMany(arr)
+      return res
+    } catch (error) {
+      return error
+    }
+  }
 }
