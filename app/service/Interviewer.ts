@@ -4,12 +4,21 @@ import Interviewer, { IInterviewer } from '../models/interviewer'
 export default class InterviewerService extends Service {
   public async List(query: any) {
     console.log(query)
+    const {pageNum = 1, pageSize = 10} = query
     if(query.name) {
-      const result: IInterviewer[] = await Interviewer.find({name: query.name})
-      return result
+      const result: IInterviewer[] = await Interviewer.find({name: query.name}).skip((Number(pageNum) - 1) * Number(pageSize)).limit(Number(pageSize))
+      const total: Number = await Interviewer.count(Interviewer.find({name: query.name}))
+      return {
+        result,
+        total
+      }
     }
-    const result: IInterviewer[] = await Interviewer.find()
-    return result
+    const result: IInterviewer[] = await Interviewer.find().skip((Number(pageNum) - 1) * Number(pageSize)).limit(Number(pageSize))
+    const total: Number = await Interviewer.count(Interviewer.find())
+    return {
+      result,
+      total
+    }
   }
 
   public async addInterviewer(interviewer: IInterviewer) {
@@ -42,11 +51,27 @@ export default class InterviewerService extends Service {
   
   public async addFromExcel(arr: IInterviewer[]){
     try {
-      console.log(arr)
+      await Interviewer.remove({})
       const res = await Interviewer.insertMany(arr)
       return res
     } catch (error) {
       return error
     }
   }
+
+  public async editInterviewer(query: any) {
+    try {
+      console.log(query)
+      const result: any = await Interviewer.findByIdAndUpdate(query.id, JSON.parse(query.query))
+      return result
+    } catch (error) {
+      return error
+    }
+  }
+
+  public async getAllList() {
+    const result: IInterviewer[] = await Interviewer.find()
+    return result
+  }
+
 }

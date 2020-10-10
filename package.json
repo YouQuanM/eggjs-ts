@@ -29,6 +29,7 @@
     "egg-mongoose": "^3.2.0",
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.6.0",
+    "excel-export": "^0.5.1",
     "mz": "^2.7.0",
     "mz-modules": "^2.1.0",
     "node-xlsx": "^0.15.0",

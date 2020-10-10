@@ -7,4 +7,6 @@ export default (app: Application) => {
   router.get('/api/addInterviewer', controller.interviewer.addInterviewer);
   router.get('/api/deleteInterviewer', controller.interviewer.deleteInterviewer);
   router.get('/api/excel', controller.interviewer.excelLoadIn);
+  router.get('/api/editInterviewer', controller.interviewer.editInterviewer);
+  router.get('/api/downloadExcel', controller.interviewer.downloadExcel);
 };

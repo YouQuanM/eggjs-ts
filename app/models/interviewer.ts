@@ -14,6 +14,7 @@ export interface IInterviewer {
   trainingDate: string;
   interviewFrequency: string;
   interviewNumber: string;
+  passNumber: string;
 }
 
 type InterviewerModel = Document & IInterviewer
@@ -30,6 +31,7 @@ const InterviewerSchema = new Schema (
     trainingDate: { type: String },
     interviewFrequency: { type: String },
     interviewNumber: { type: String },
+    passNumber: {type: String}
   },
   {
     timestamps: true,
