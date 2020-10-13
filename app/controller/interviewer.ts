@@ -1,5 +1,6 @@
 import { Controller } from 'egg';
 import { fs } from 'mz';
+const moment = require('moment');
 
 export default class InterviewerController extends Controller {
   public async addInterviewer() {
@@ -68,6 +69,7 @@ export default class InterviewerController extends Controller {
       for (var i = 1; i < excelObj.length; i++) {
         var rdata = excelObj[i];
         if (rdata.length > 0) {
+          console.log(`rdata[8]===>${rdata[8]}`)
           var interviewer = {
             name: rdata[1],
             gender: rdata[2],
@@ -76,7 +78,7 @@ export default class InterviewerController extends Controller {
             jobTitle: rdata[5],
             level: rdata[6],
             workingTerritory: rdata[7],
-            trainingDate: rdata[8],
+            trainingDate: moment(rdata[8],'YYYYMMDD').valueOf(),
             interviewFrequency: rdata[9],
             interviewNumber: rdata[10],
             passNumber: rdata[11]
