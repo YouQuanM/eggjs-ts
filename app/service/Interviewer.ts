@@ -5,6 +5,14 @@ export default class InterviewerService extends Service {
   public async List(query: any) {
     console.log(query)
     const {pageNum = 1, pageSize = 10} = query
+    if(query.alert == 'true') {
+      const result: IInterviewer[] = await Interviewer.find({trainingDate: {$lt: new Date().setFullYear((new Date().getFullYear()-1))}}).skip((Number(pageNum) - 1) * Number(pageSize)).limit(Number(pageSize))
+      const total: Number = await Interviewer.count(Interviewer.find({trainingDate: {$lt: new Date().setFullYear((new Date().getFullYear()-1))}}))
+      return {
+        result,
+        total
+      }
+    }
     if(query.name) {
       const result: IInterviewer[] = await Interviewer.find({name: query.name}).skip((Number(pageNum) - 1) * Number(pageSize)).limit(Number(pageSize))
       const total: Number = await Interviewer.count(Interviewer.find({name: query.name}))
