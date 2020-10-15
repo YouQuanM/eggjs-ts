@@ -30,6 +30,7 @@
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.6.0",
     "excel-export": "^0.5.1",
+    "exceljs": "^4.1.1",
     "moment": "^2.29.1",
     "mz": "^2.7.0",
     "mz-modules": "^2.1.0",

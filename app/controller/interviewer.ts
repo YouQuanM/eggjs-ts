@@ -1,6 +1,7 @@
 import { Controller } from 'egg';
-import { fs } from 'mz';
+// import { fs } from 'mz';
 const moment = require('moment');
+const Excel = require('exceljs')
 
 export default class InterviewerController extends Controller {
   public async addInterviewer() {
@@ -69,7 +70,6 @@ export default class InterviewerController extends Controller {
       for (var i = 1; i < excelObj.length; i++) {
         var rdata = excelObj[i];
         if (rdata.length > 0) {
-          console.log(`rdata[8]===>${rdata[8]}`)
           var interviewer = {
             name: rdata[1],
             gender: rdata[2],
@@ -78,7 +78,7 @@ export default class InterviewerController extends Controller {
             jobTitle: rdata[5],
             level: rdata[6],
             workingTerritory: rdata[7],
-            trainingDate: moment(rdata[8],'YYYYMMDD').valueOf(),
+            trainingDate: moment(rdata[8], 'YYYYMMDD').valueOf(),
             interviewFrequency: rdata[9],
             interviewNumber: rdata[10],
             passNumber: rdata[11]
@@ -112,66 +112,65 @@ export default class InterviewerController extends Controller {
   }
 
   public async downloadExcel() {
-    const { ctx } = this
-    try {
-      var nodeExcel = require('excel-export')
-      const result = await ctx.service.interviewer.getAllList();
-      var conf: any = {};//创建一个写入格式map，其中cols(表头)，rows(每一行的数据);
-      conf.name = '面试官信息'
-      // var cols = ['姓名', '性别', '所属公司', '部门', '职务', '面试官级别', '工作属地', '培训/复训日期', '面试场次', '面试人数', '通过人数'];
-      conf.cols = [{
-        caption:'姓名',
-            type:'string',
-      },{
-        caption:'性别',
-        type:'string',
-      },{
-        caption:'所属公司',
-        type:'string'
-      },{
-        caption:'部门',
-        type:'string'
-      },{
-        caption:'职务',
-        type:'string'
-      },{
-        caption:'面试官级别',
-        type:'string'
-      },{
-        caption:'工作属地',
-        type:'string'
-      },{
-        caption:'培训/复训日期',
-        type:'string'
-      },{
-        caption:'面试场次',
-        type:'string'
-      },{
-        caption:'面试人数',
-        type:'string'
-      },{
-        caption:'通过人数',
-        type:'string'
-      }]
-      const tows = ['name', 'gender', 'affiliatedCompany', 'department', 'jobTitle', 'level', 'workingTerritory', 'trainingDate', 'interviewFrequency', 'interviewNumber', 'passNumber']
-      let datas: any = [];//用于承载数据库中的数据
-      let towsLen = tows.length
-      let dataLen = result.length
-      for (var i = 0; i < dataLen; i++) {//循环数据库得到的数据，因为取出的数据格式为
-        let row: any = [];//用来装载每次得到的数据
-        for (let j = 0; j < towsLen; j++) {//内循环取出每个
-          row.push(result[i][tows[j]].toString());
-        }
-        datas.push(row);//将每一个{ }中的数据添加到承载中
+    const { ctx } = this;
+    const workbook = new Excel.Workbook()
+    workbook.creator = 'juhaoran'
+    workbook.lastModifiedBy = 'juhaoran'
+    workbook.created = new Date()
+    workbook.modified = new Date()
+    let sheet = workbook.addWorksheet('面试官表格')
+
+    sheet.columns = [
+      { header: '姓名', key: 'name' },
+      { header: '性别', key: 'gender' }, {
+        header: '所属公司',
+        key: 'affiliatedCompany'
+      }, {
+        header: '部门',
+        key: 'department'
+      }, {
+        header: '职务',
+        key: 'jobTitle'
+      }, {
+        header: '面试官级别',
+        key: 'level'
+      }, {
+        header: '工作属地',
+        key: 'workingTerritory'
+      }, {
+        header: '培训/复训日期',
+        key: 'trainingDate'
+      }, {
+        header: '面试场次',
+        key: 'interviewFrequency'
+      }, {
+        header: '面试人数',
+        key: 'interviewNumber'
+      }, {
+        header: '通过人数',
+        key: 'passNumber'
       }
-      conf.rows = datas;//将所有行加入rows中
-      var excel = nodeExcel.execute(conf);//将所有数据写入nodeExcel中
-      const fileName = 'test.xlsx';
-      ctx.response.attachment(fileName);
-      ctx.status = 200;
-      ctx.body = fs.createReadStream(excel);
+    ]
+    try {
+
+      const result = await ctx.service.interviewer.getAllList();
+      console.log(result);
+      
+      result.forEach(item => {
+        item.trainingDate = moment(new Date(Number(item.trainingDate))).format('YYYYMMDD')
+      })
+      sheet.addRows(result)
+
+      //我们要下载excel文件，可以这样设置
+      ctx.attachment('面试官表格.xlsx')
+      ctx.type = '.xlsx'
+      this.ctx.set('Content-Type', 'application/octet-stream')
+      //设置响应 Content-Type 通过 mime 字符串或文件扩展名。如：ctx.type = 'text/plain; charset=utf-8'; 或者 ctx.type = '.png';
+      ctx.body = await workbook.xlsx.writeBuffer() // 这个是exceljs的方法
     } catch (error) {
 
     }
+    
+
   }
 }
