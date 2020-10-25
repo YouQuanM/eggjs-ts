@@ -22,7 +22,6 @@
     "clean": "ets clean"
   },
   "dependencies": {
-    "bcrypt": "^3.0.7",
     "egg": "^2.6.1",
     "egg-cors": "^2.2.3",
     "egg-jwt": "^3.1.7",
@@ -38,7 +37,6 @@
     "stream-wormhole": "^1.1.0"
   },
   "devDependencies": {
-    "@types/bcrypt": "^3.0.0",
     "@types/mocha": "^2.2.40",
     "@types/moment": "^2.13.0",
     "@types/mz": "^2.7.0",

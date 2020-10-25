@@ -62,7 +62,7 @@ export default class InterviewerController extends Controller {
     const { ctx } = this;
     try {
       const node_xlsx = require('node-xlsx');
-      const obj = node_xlsx.parse('/Users/yinhang/Desktop/juhaoran.xlsx');// 支持的excel文件类有.xlsx .xls .xlsm .xltx .xltm .xlsb .xlam等
+      const obj = node_xlsx.parse('/Users/yinhang/Desktop/面试官表格.xlsx');// 支持的excel文件类有.xlsx .xls .xlsm .xltx .xltm .xlsb .xlam等
       const excelObj = obj[0].data;//取得第一个excel表的数据
       let insertData: any = [];//存放数据
       // console.log(excelObj)
@@ -71,17 +71,17 @@ export default class InterviewerController extends Controller {
         var rdata = excelObj[i];
         if (rdata.length > 0) {
           var interviewer = {
-            name: rdata[1],
-            gender: rdata[2],
-            affiliatedCompany: rdata[3],
-            department: rdata[4],
-            jobTitle: rdata[5],
-            level: rdata[6],
-            workingTerritory: rdata[7],
-            trainingDate: moment(rdata[8], 'YYYYMMDD').valueOf(),
-            interviewFrequency: rdata[9],
-            interviewNumber: rdata[10],
-            passNumber: rdata[11]
+            name: rdata[0],
+            gender: rdata[1],
+            affiliatedCompany: rdata[2],
+            department: rdata[3],
+            jobTitle: rdata[4],
+            level: rdata[5],
+            workingTerritory: rdata[6],
+            trainingDate: moment(rdata[7], 'YYYYMMDD').valueOf(),
+            interviewFrequency: rdata[8],
+            interviewNumber: rdata[9],
+            passNumber: rdata[10]
           }
           insertData.push(interviewer)
         }
@@ -170,7 +170,5 @@ export default class InterviewerController extends Controller {
     } catch (error) {
 
     }
-    
-
   }
 }
